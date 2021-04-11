@@ -1,11 +1,13 @@
 package com.irzstudio.githubrestapi.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ProgressBar
+import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.irzstudio.githubrestapi.R
 import com.irzstudio.githubrestapi.RetrofitClient
@@ -25,38 +27,26 @@ class SearchUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_searchuser)
 
-
-        requestUserQuery("riz")
-
+        searchView()
         setList()
     }
 
-
-    private fun initView() {
-        etv_search.setOnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                return@setOnKeyListener true
+    private fun searchView() {
+        search_user.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                search_user.clearFocus()
+                return true
             }
-            return@setOnKeyListener false
-        }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                requestUserQuery(newText)
+                return false
+            }
+
+        })
     }
 
-    private fun setList() {
-        adapter = SearchUserAdapter()
-        rv_user_search.setHasFixedSize(true)
-        rv_user_search.adapter = adapter
-        rv_user_search.layoutManager = LinearLayoutManager(this@SearchUserActivity)
-    }
-
-    private fun showLoading(state: Boolean) {
-        if (state) {
-            pb_user.visibility = View.VISIBLE
-        } else {
-            pb_user.visibility = View.GONE
-        }
-    }
-
-    private fun requestUserQuery(query:String?) {
+    private fun requestUserQuery(query: String?) {
         RetrofitClient.instance.getUser(query.orEmpty()).enqueue(object : Callback<DataUser> {
             override fun onResponse(call: Call<DataUser>, response: Response<DataUser>) {
                 adapter.setData(response.body()!!.items)
@@ -67,6 +57,18 @@ class SearchUserActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun setList() {
+        adapter = SearchUserAdapter()
+        rv_user_search.setHasFixedSize(true)
+        rv_user_search.adapter = adapter
+        rv_user_search.layoutManager = LinearLayoutManager(this@SearchUserActivity)
+    }
+
+    private fun navigationToDetailUser(detailUserActivity: DetailUserActivity) {
+        val intent = Intent(applicationContext, DetailUserActivity::class.java)
+
     }
 
 }
