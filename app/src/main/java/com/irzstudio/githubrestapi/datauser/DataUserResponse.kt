@@ -1,5 +1,5 @@
 package com.irzstudio.githubrestapi.datauser
 
-data class DataUser(
+data class DataUserResponse(
     val items: ArrayList<DataItemUser>
 )

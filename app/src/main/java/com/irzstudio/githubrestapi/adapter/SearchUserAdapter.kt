@@ -11,13 +11,13 @@ import com.irzstudio.githubrestapi.`interface`.OnListener
 import com.irzstudio.githubrestapi.datauser.DataItemUser
 import kotlinx.android.synthetic.main.item_list_user.view.*
 
-class SearchUserAdapter : RecyclerView.Adapter<SearchUserAdapter.DetailUserViewHolder>() {
+class SearchUserAdapter : RecyclerView.Adapter<SearchUserAdapter.SearchUserViewHolder>() {
 
     private val list: MutableList<DataItemUser> = mutableListOf()
 
     var onClickListener: OnListener? = null
 
-    inner class DetailUserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class SearchUserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(dataItemlUser: DataItemUser) {
 
             itemView.setOnClickListener {
@@ -41,13 +41,13 @@ class SearchUserAdapter : RecyclerView.Adapter<SearchUserAdapter.DetailUserViewH
         notifyDataSetChanged()//menampilkan data yg baru ke user
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailUserViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchUserViewHolder {
         val view: View =
             LayoutInflater.from(parent.context).inflate(R.layout.item_list_user, parent, false)
-        return DetailUserViewHolder(view)
+        return SearchUserViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: DetailUserViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SearchUserViewHolder, position: Int) {
         holder.bind(list[position])
     }
 

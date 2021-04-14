@@ -10,5 +10,8 @@ data class DataDetailUser(
     val email: String,
     val bio: String,
     val followers: Int,
-    val following: Int
+    val following: Int,
+    val starred_url:String,
+    val organizations_url: String,
+    val repos_url: String
 )

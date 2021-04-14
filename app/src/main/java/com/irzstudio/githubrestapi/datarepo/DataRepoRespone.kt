@@ -1,6 +1,6 @@
 package com.irzstudio.githubrestapi.datarepo
 
-data class DataRepo(
+data class DataRepoRespone(
     val id: Int,
     val name: String,
     val html_url: String,

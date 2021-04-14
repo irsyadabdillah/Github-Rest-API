@@ -13,7 +13,7 @@
         android:theme="@style/Theme.GithubRestAPI">
         <activity android:name=".activity.RepoActivity"></activity>
         <activity android:name=".activity.DetailUserActivity" />
-        <activity android:name=".activity.SearchUserActivity">
+        <activity android:name=".activity.search.SearchUserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
