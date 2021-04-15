@@ -9,8 +9,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.irzstudio.githubrestapi.RetrofitClient
 import com.irzstudio.githubrestapi.`interface`.OnListener
 import com.irzstudio.githubrestapi.activity.DetailUserActivity
+import com.irzstudio.githubrestapi.adapter.PinnedAdapter
 import com.irzstudio.githubrestapi.adapter.SearchUserAdapter
 import com.irzstudio.githubrestapi.databinding.ActivitySearchuserBinding
+import com.irzstudio.githubrestapi.datauser.DataDetailUser
 import com.irzstudio.githubrestapi.datauser.DataItemUser
 import com.irzstudio.githubrestapi.datauser.DataUserResponse
 import kotlinx.android.synthetic.main.activity_searchuser.*
@@ -48,7 +50,6 @@ class SearchUserActivity : AppCompatActivity() {
                 requestUserQuery(newText)
                 return false
             }
-
         })
     }
 
@@ -56,6 +57,8 @@ class SearchUserActivity : AppCompatActivity() {
         RetrofitClient.instance.getUser(query.orEmpty()).enqueue(object : Callback<DataUserResponse> {
             override fun onResponse(call: Call<DataUserResponse>, response: Response<DataUserResponse>) {
                 adapter.setData(response.body()!!.items)
+                sumResult(dataUser = response.body()!!)
+
             }
 
             override fun onFailure(call: Call<DataUserResponse>, t: Throwable) {
@@ -63,6 +66,7 @@ class SearchUserActivity : AppCompatActivity() {
             }
         })
     }
+
 
     private fun setList() {
         adapter = SearchUserAdapter()
@@ -79,7 +83,7 @@ class SearchUserActivity : AppCompatActivity() {
     private fun navigationToDetailUser(dataItemUser: DataItemUser) {
         val intent = Intent(applicationContext, DetailUserActivity::class.java)
         intent.putExtra("login", dataItemUser.login)
-        intent.putExtra("avatar", dataItemUser.avatar_url)
+        startActivity(intent)
     }
 }
 

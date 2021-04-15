@@ -17,6 +17,6 @@ interface Api {
     @GET("users/{username}")
     fun getDetailUser(@Path("username") username: String): Call<DataDetailUser>
 
-    @GET("rizmaulana/repos")
-    fun getRepo(): Call<Array<DataRepoRespone>>
+    @GET("users/{username}/repos")
+    fun getRepoPin(@Path("username") username: String): Call<ArrayList<DataRepoRespone>>
 }

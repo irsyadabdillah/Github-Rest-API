@@ -8,14 +8,12 @@
     android:orientation="vertical"
     tools:context=".activity.DetailUserActivity">
 
-    <!--Image Account, Full Name & User Name-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="20dp">
 
-        <!--Image Account-->
         <androidx.cardview.widget.CardView
             android:layout_width="84dp"
             android:layout_height="84dp"
@@ -29,7 +27,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!--Full Name & User Name-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -57,7 +54,7 @@
 
     </LinearLayout>
 
-    <!--Bio and profil-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -160,7 +157,6 @@
 
     </LinearLayout>
 
-    <!--Pinned-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -178,18 +174,18 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_repo_pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="2">
+            tools:itemCount="5">
 
         </androidx.recyclerview.widget.RecyclerView>
 
 
     </LinearLayout>
 
-    <!--Repositories-->
     <TextView
         android:id="@+id/tv_repositories"
         android:layout_width="wrap_content"
@@ -197,7 +193,6 @@
         android:text="Repositories"
         android:layout_marginHorizontal="24dp"/>
 
-    <!--Organizations-->
     <TextView
         android:id="@+id/tv_organizations"
         android:layout_width="wrap_content"
@@ -206,7 +201,6 @@
         android:layout_marginTop="8dp"
         android:layout_marginHorizontal="24dp"/>
 
-    <!--Starred-->
     <TextView
         android:id="@+id/tv_starred"
         android:layout_width="wrap_content"
