@@ -3,7 +3,6 @@ package com.irzstudio.githubrestapi.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.irzstudio.githubrestapi.RetrofitClient
@@ -56,7 +55,7 @@ class DetailUserActivity : AppCompatActivity() {
                     binding.tvBlog.text = it.blog
                     binding.tvFollower.text = it.followers.toString()
                     binding.tvFollowing.text = it.following.toString()
-
+                    binding.tvRepositories.text = it.public_repos.toString()
 
                 }
             }

@@ -183,30 +183,68 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="24dp">
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Repositories" />
+
+        <TextView
+            android:id="@+id/tv_repositories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20"/>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_repositories"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Repositories"
-        android:layout_marginHorizontal="24dp"/>
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="24dp"
+        android:gravity="center"
+        android:layout_marginTop="16dp">
 
-    <TextView
-        android:id="@+id/tv_organizations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Organizations"
-        android:layout_marginTop="8dp"
-        android:layout_marginHorizontal="24dp"/>
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Organizations" />
 
-    <TextView
-        android:id="@+id/tv_starred"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/tv_organizations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Starred"
-        android:layout_marginTop="8dp"
-        android:layout_marginHorizontal="24dp"/>
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="24dp"
+        android:gravity="center"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Starred" />
+
+        <TextView
+            android:id="@+id/tv_starred"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20"/>
+    </LinearLayout>
 
 </LinearLayout>
