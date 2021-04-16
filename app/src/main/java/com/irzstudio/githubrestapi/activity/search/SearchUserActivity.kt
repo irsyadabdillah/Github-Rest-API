@@ -3,25 +3,21 @@ package com.irzstudio.githubrestapi.activity.search
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.irzstudio.githubrestapi.RetrofitClient
 import com.irzstudio.githubrestapi.`interface`.OnListener
 import com.irzstudio.githubrestapi.activity.DetailUserActivity
-import com.irzstudio.githubrestapi.adapter.PinnedAdapter
 import com.irzstudio.githubrestapi.adapter.SearchUserAdapter
 import com.irzstudio.githubrestapi.databinding.ActivitySearchuserBinding
-import com.irzstudio.githubrestapi.datauser.DataDetailUser
 import com.irzstudio.githubrestapi.datauser.DataItemUser
-import com.irzstudio.githubrestapi.datauser.DataUserResponse
 import kotlinx.android.synthetic.main.activity_searchuser.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class SearchUserActivity : AppCompatActivity() {
+
+    private lateinit var viewModel: SearchViewModel
 
     private lateinit var adapter: SearchUserAdapter
     private lateinit var binding: ActivitySearchuserBinding
@@ -30,9 +26,21 @@ class SearchUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchuserBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        viewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
 
         searchView()
         setList()
+        observeLiveData()
+    }
+
+    private fun observeLiveData() {
+        viewModel.dataDetailUserList.observe(this, { dataUserResponse ->
+            adapter.setData(dataUserResponse)
+            sumResult(dataUserResponse.size)
+        })
+        viewModel.message.observe(this, { message ->
+            Toast.makeText(this@SearchUserActivity, message, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun sumResult(total: Int) {
@@ -43,33 +51,15 @@ class SearchUserActivity : AppCompatActivity() {
         binding.searchUser.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.searchUser.clearFocus()
+                // viewModel.requestUserQuery(query)
+                viewModel.sayHallo(query.orEmpty())
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                requestUserQuery(newText)
                 return false
             }
         })
-    }
-
-    private fun requestUserQuery(query: String?) {
-        RetrofitClient.instance.getUser(query.orEmpty())
-            .enqueue(object : Callback<DataUserResponse> {
-                override fun onResponse(
-                    call: Call<DataUserResponse>,
-                    response: Response<DataUserResponse>
-                ) {
-                    val dataUserResponse: DataUserResponse = response.body()!!
-                    adapter.setData(dataUserResponse.items)
-                    sumResult(dataUserResponse.items.size)
-
-                }
-
-                override fun onFailure(call: Call<DataUserResponse>, t: Throwable) {
-                    t.message?.let { Log.d("Error", it) }
-                }
-            })
     }
 
 
