@@ -41,22 +41,9 @@ class DetailUserActivity : AppCompatActivity() {
                 call: Call<DataDetailUser>,
                 response: Response<DataDetailUser>
             ) {
-                response.body()?.let {
-
-                    Glide.with(this@DetailUserActivity)
-                        .load(it.avatar_url)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .centerCrop()
-                        .into(binding.ivProfil)
-                    binding.tvFullname.text = it.login
-                    binding.tvUsername.text = it.name
-                    binding.tvBio.text = it.bio
-                    binding.tvLocation.text = it.location
-                    binding.tvBlog.text = it.blog
-                    binding.tvFollower.text = it.followers.toString()
-                    binding.tvFollowing.text = it.following.toString()
-                    binding.tvRepositories.text = it.public_repos.toString()
-
+                response.body()?.let { dataDetailUser ->
+                    setUserData(dataDetailUser)
+                    loadImage(dataDetailUser.avatar_url)
                 }
             }
 
@@ -66,23 +53,44 @@ class DetailUserActivity : AppCompatActivity() {
         })
     }
 
-    private fun requestDataRepoPin(){
-        RetrofitClient.instance.getRepoPin(login).enqueue(object : Callback<ArrayList<DataRepoRespone>>{
-            override fun onResponse(
-                call: Call<ArrayList<DataRepoRespone>>,
-                response: Response<ArrayList<DataRepoRespone>>
-            ) {
-                adapterRepoPin.setRepoPin(response.body()!!)
-            }
-
-            override fun onFailure(call: Call<ArrayList<DataRepoRespone>>, t: Throwable) {
-                t.message?.let { Log.d("Error", it) }
-            }
-
-        })
+    private fun setUserData(dataDetailUser : DataDetailUser) {
+        binding.tvFullname.text = dataDetailUser.login
+        binding.tvUsername.text = dataDetailUser.name
+        binding.tvBio.text = dataDetailUser.bio
+        binding.tvLocation.text = dataDetailUser.location
+        binding.tvBlog.text = dataDetailUser.blog
+        binding.tvFollower.text = dataDetailUser.followers.toString()
+        binding.tvFollowing.text = dataDetailUser.following.toString()
+        binding.tvRepositories.text = dataDetailUser.public_repos.toString()
     }
 
-    private fun setListRepo(){
+    private fun loadImage(url: String){
+        Glide.with(this@DetailUserActivity)
+            .load(url)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .centerCrop()
+            .into(binding.ivProfil)
+    }
+
+
+    private fun requestDataRepoPin() {
+        RetrofitClient.instance.getRepoPin(login)
+            .enqueue(object : Callback<ArrayList<DataRepoRespone>> {
+                override fun onResponse(
+                    call: Call<ArrayList<DataRepoRespone>>,
+                    response: Response<ArrayList<DataRepoRespone>>
+                ) {
+                    adapterRepoPin.setRepoPin(response.body()!!)
+                }
+
+                override fun onFailure(call: Call<ArrayList<DataRepoRespone>>, t: Throwable) {
+                    t.message?.let { Log.d("Error", it) }
+                }
+
+            })
+    }
+
+    private fun setListRepo() {
         adapterRepoPin = PinnedAdapter()
         binding.rvRepoPin.setHasFixedSize(true)
         binding.rvRepoPin.adapter = adapterRepoPin

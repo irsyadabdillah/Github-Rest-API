@@ -35,8 +35,8 @@ class SearchUserActivity : AppCompatActivity() {
         setList()
     }
 
-    private fun sumResult(dataUser: DataUserResponse) {
-        binding.txtResult.text = "Menampilkan ${dataUser.items.size.toString()} hasil"
+    private fun sumResult(total: Int) {
+        binding.txtResult.text = "Menampilkan $total hasil"
     }
 
     private fun searchView() {
@@ -54,17 +54,22 @@ class SearchUserActivity : AppCompatActivity() {
     }
 
     private fun requestUserQuery(query: String?) {
-        RetrofitClient.instance.getUser(query.orEmpty()).enqueue(object : Callback<DataUserResponse> {
-            override fun onResponse(call: Call<DataUserResponse>, response: Response<DataUserResponse>) {
-                adapter.setData(response.body()!!.items)
-                sumResult(dataUser = response.body()!!)
+        RetrofitClient.instance.getUser(query.orEmpty())
+            .enqueue(object : Callback<DataUserResponse> {
+                override fun onResponse(
+                    call: Call<DataUserResponse>,
+                    response: Response<DataUserResponse>
+                ) {
+                    val dataUserResponse: DataUserResponse = response.body()!!
+                    adapter.setData(dataUserResponse.items)
+                    sumResult(dataUserResponse.items.size)
 
-            }
+                }
 
-            override fun onFailure(call: Call<DataUserResponse>, t: Throwable) {
-                t.message?.let { Log.d("Error", it) }
-            }
-        })
+                override fun onFailure(call: Call<DataUserResponse>, t: Throwable) {
+                    t.message?.let { Log.d("Error", it) }
+                }
+            })
     }
 
 
