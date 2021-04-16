@@ -17,10 +17,13 @@ import retrofit2.Response
 
 class DetailUserActivity : AppCompatActivity() {
 
-    private var login = ""
-    private var avatar = ""
+    private val login: String by lazy {
+        intent.getStringExtra("login") ?: ""
+    }
+    private val adapterRepoPin: PinnedAdapter by lazy {
+        PinnedAdapter()
+    }
 
-    private lateinit var adapterRepoPin: PinnedAdapter
     private lateinit var binding: ActivityDetailuserBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,7 +31,6 @@ class DetailUserActivity : AppCompatActivity() {
         binding = ActivityDetailuserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        loadDataDetailUser()
         requestDetailUserQuery()
         requestDataRepoPin()
         setListRepo()
@@ -53,7 +55,7 @@ class DetailUserActivity : AppCompatActivity() {
         })
     }
 
-    private fun setUserData(dataDetailUser : DataDetailUser) {
+    private fun setUserData(dataDetailUser: DataDetailUser) {
         binding.tvFullname.text = dataDetailUser.login
         binding.tvUsername.text = dataDetailUser.name
         binding.tvBio.text = dataDetailUser.bio
@@ -64,7 +66,7 @@ class DetailUserActivity : AppCompatActivity() {
         binding.tvRepositories.text = dataDetailUser.public_repos.toString()
     }
 
-    private fun loadImage(url: String){
+    private fun loadImage(url: String) {
         Glide.with(this@DetailUserActivity)
             .load(url)
             .transition(DrawableTransitionOptions.withCrossFade())
@@ -91,14 +93,8 @@ class DetailUserActivity : AppCompatActivity() {
     }
 
     private fun setListRepo() {
-        adapterRepoPin = PinnedAdapter()
         binding.rvRepoPin.setHasFixedSize(true)
         binding.rvRepoPin.adapter = adapterRepoPin
-    }
-
-    private fun loadDataDetailUser() {
-        login = intent.getStringExtra("login") ?: ""
-        avatar = intent.getStringExtra("avatar") ?: ""
     }
 
 }
