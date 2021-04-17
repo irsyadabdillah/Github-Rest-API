@@ -16,6 +16,8 @@ class SearchViewModel : ViewModel() {
     private val _dataItemUserList = MutableLiveData<ArrayList<DataItemUser>>()
     val dataItemUserList: LiveData<ArrayList<DataItemUser>> = _dataItemUserList
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage : LiveData<String> = _errorMessage
 
     fun requestUserQuery(query: String?) {
         RetrofitClient.instance.getUser(query.orEmpty())
@@ -30,7 +32,8 @@ class SearchViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<DataUserResponse>, t: Throwable) {
-                    t.message?.let { Log.d("Error", it) }
+                    t.printStackTrace()
+                    _errorMessage.postValue("Error")
                 }
             })
     }

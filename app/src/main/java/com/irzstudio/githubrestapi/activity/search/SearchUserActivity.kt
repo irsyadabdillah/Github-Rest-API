@@ -31,6 +31,7 @@ class SearchUserActivity : AppCompatActivity() {
         searchView()
         setList()
         observeLiveData()
+        observerErrorMessage()
     }
 
     private fun observeLiveData() {
@@ -42,6 +43,12 @@ class SearchUserActivity : AppCompatActivity() {
 
     private fun sumResult(total: Int) {
         binding.txtResult.text = "Menampilkan $total hasil"
+    }
+
+    private fun observerErrorMessage(){
+        viewModel.errorMessage.observe(this, {
+            Toast.makeText(this@SearchUserActivity, it, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private fun searchView() {
