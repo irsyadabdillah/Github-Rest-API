@@ -1,11 +1,14 @@
-package com.irzstudio.githubrestapi.activity
+package com.irzstudio.githubrestapi.activity.detailuser
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.irzstudio.githubrestapi.RetrofitClient
+import com.irzstudio.githubrestapi.activity.search.SearchViewModel
 import com.irzstudio.githubrestapi.adapter.PinnedAdapter
 import com.irzstudio.githubrestapi.databinding.ActivityDetailuserBinding
 import com.irzstudio.githubrestapi.datarepo.DataRepoRespone
@@ -17,6 +20,9 @@ import retrofit2.Response
 
 class DetailUserActivity : AppCompatActivity() {
 
+    private lateinit var viewModel : DetailViewModel
+    private lateinit var binding: ActivityDetailuserBinding
+
     private val login: String by lazy {
         intent.getStringExtra("login") ?: ""
     }
@@ -24,38 +30,37 @@ class DetailUserActivity : AppCompatActivity() {
         PinnedAdapter()
     }
 
-    private lateinit var binding: ActivityDetailuserBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailuserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        requestDetailUserQuery()
-        requestDataRepoPin()
+        viewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
+
+        viewModel.requestDetailUserQuery(login)
+        viewModel.requestDataRepoPin(login)
         setListRepo()
+        observeLiveData()
+        observeLiveDataRepo()
     }
 
-
-    private fun requestDetailUserQuery() {
-        RetrofitClient.instance.getDetailUser(login).enqueue(object : Callback<DataDetailUser> {
-            override fun onResponse(
-                call: Call<DataDetailUser>,
-                response: Response<DataDetailUser>
-            ) {
-                response.body()?.let { dataDetailUser ->
-                    setUserData(dataDetailUser)
-                    loadImage(dataDetailUser.avatar_url)
-                }
-            }
-
-            override fun onFailure(call: Call<DataDetailUser>, t: Throwable) {
-                t.message?.let { Log.d("Error", it) }
-            }
+    private fun observeLiveData(){
+        viewModel.dataDetailUserList.observe(this, {dataDetailUserRespone ->
+            setUserData(dataDetailUserRespone)
+            loadImage(dataDetailUserRespone.avatar_url)
         })
     }
 
-    private fun setUserData(dataDetailUser: DataDetailUser) {
+    private fun observeLiveDataRepo(){
+        viewModel.dataResponse.observe(this,{dataRepoResponse ->
+            adapterRepoPin.setRepoPin(dataRepoResponse)
+
+        })
+    }
+
+
+    fun setUserData(dataDetailUser: DataDetailUser) {
         binding.tvFullname.text = dataDetailUser.login
         binding.tvUsername.text = dataDetailUser.name
         binding.tvBio.text = dataDetailUser.bio
@@ -66,30 +71,12 @@ class DetailUserActivity : AppCompatActivity() {
         binding.tvRepositories.text = dataDetailUser.public_repos.toString()
     }
 
-    private fun loadImage(url: String) {
+    fun loadImage(url: String) {
         Glide.with(this@DetailUserActivity)
             .load(url)
             .transition(DrawableTransitionOptions.withCrossFade())
             .centerCrop()
             .into(binding.ivProfil)
-    }
-
-
-    private fun requestDataRepoPin() {
-        RetrofitClient.instance.getRepoPin(login)
-            .enqueue(object : Callback<ArrayList<DataRepoRespone>> {
-                override fun onResponse(
-                    call: Call<ArrayList<DataRepoRespone>>,
-                    response: Response<ArrayList<DataRepoRespone>>
-                ) {
-                    adapterRepoPin.setRepoPin(response.body()!!)
-                }
-
-                override fun onFailure(call: Call<ArrayList<DataRepoRespone>>, t: Throwable) {
-                    t.message?.let { Log.d("Error", it) }
-                }
-
-            })
     }
 
     private fun setListRepo() {

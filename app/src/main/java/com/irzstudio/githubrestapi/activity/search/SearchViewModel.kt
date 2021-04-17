@@ -13,8 +13,8 @@ import retrofit2.Response
 
 class SearchViewModel : ViewModel() {
 
-    private val _dataDetailUserList = MutableLiveData<ArrayList<DataItemUser>>()
-    val dataDetailUserList: LiveData<ArrayList<DataItemUser>> = _dataDetailUserList
+    private val _dataItemUserList = MutableLiveData<ArrayList<DataItemUser>>()
+    val dataItemUserList: LiveData<ArrayList<DataItemUser>> = _dataItemUserList
 
     val message = MutableLiveData<String>()
 
@@ -30,7 +30,7 @@ class SearchViewModel : ViewModel() {
                     response: Response<DataUserResponse>
                 ) {
                     val dataUserResponse: DataUserResponse = response.body()!!
-                    _dataDetailUserList.postValue(dataUserResponse.items)
+                    _dataItemUserList.postValue(dataUserResponse.items)
 
                 }
 

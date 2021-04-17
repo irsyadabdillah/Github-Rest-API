@@ -8,7 +8,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.irzstudio.githubrestapi.`interface`.OnListener
-import com.irzstudio.githubrestapi.activity.DetailUserActivity
+import com.irzstudio.githubrestapi.activity.detailuser.DetailUserActivity
 import com.irzstudio.githubrestapi.adapter.SearchUserAdapter
 import com.irzstudio.githubrestapi.databinding.ActivitySearchuserBinding
 import com.irzstudio.githubrestapi.datauser.DataItemUser
@@ -34,9 +34,9 @@ class SearchUserActivity : AppCompatActivity() {
     }
 
     private fun observeLiveData() {
-        viewModel.dataDetailUserList.observe(this, { dataUserResponse ->
-            adapter.setData(dataUserResponse)
-            sumResult(dataUserResponse.size)
+        viewModel.dataItemUserList.observe(this, { dataItemUserResponse ->
+            adapter.setData(dataItemUserResponse)
+            sumResult(dataItemUserResponse.size)
         })
         viewModel.message.observe(this, { message ->
             Toast.makeText(this@SearchUserActivity, message, Toast.LENGTH_SHORT).show()
@@ -51,8 +51,8 @@ class SearchUserActivity : AppCompatActivity() {
         binding.searchUser.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.searchUser.clearFocus()
-                // viewModel.requestUserQuery(query)
-                viewModel.sayHallo(query.orEmpty())
+                viewModel.requestUserQuery(query)
+                // viewModel.sayHallo(query.orEmpty())
                 return true
             }
 
@@ -61,7 +61,6 @@ class SearchUserActivity : AppCompatActivity() {
             }
         })
     }
-
 
     private fun setList() {
         adapter = SearchUserAdapter()
