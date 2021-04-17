@@ -19,6 +19,9 @@ class DetailViewModel : ViewModel() {
     private val _dataRepoList = MutableLiveData<ArrayList<DataRepoRespone>>()
     val dataResponse : LiveData<ArrayList<DataRepoRespone>> = _dataRepoList
 
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage : LiveData<String> = _errorMessage
+
 
     fun requestDetailUserQuery(query: String?) {
         RetrofitClient.instance.getDetailUser(query.orEmpty()).enqueue(object : Callback<DataDetailUser> {
@@ -32,7 +35,8 @@ class DetailViewModel : ViewModel() {
             }
 
             override fun onFailure(call: Call<DataDetailUser>, t: Throwable) {
-                t.message?.let { Log.d("Error", it) }
+                t.printStackTrace()
+                _errorMessage.postValue("Error")
             }
         })
     }
@@ -50,7 +54,8 @@ class DetailViewModel : ViewModel() {
                 }
 
                 override fun onFailure(call: Call<ArrayList<DataRepoRespone>>, t: Throwable) {
-                    t.message?.let { Log.d("Error", it) }
+                    t.printStackTrace()
+                    _errorMessage.postValue("Error")
                 }
 
             })

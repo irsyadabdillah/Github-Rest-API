@@ -16,11 +16,6 @@ class SearchViewModel : ViewModel() {
     private val _dataItemUserList = MutableLiveData<ArrayList<DataItemUser>>()
     val dataItemUserList: LiveData<ArrayList<DataItemUser>> = _dataItemUserList
 
-    val message = MutableLiveData<String>()
-
-    fun sayHallo(name: String) {
-        // message.postValue("Halo, selamat datang $name")
-    }
 
     fun requestUserQuery(query: String?) {
         RetrofitClient.instance.getUser(query.orEmpty())

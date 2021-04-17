@@ -3,6 +3,7 @@ package com.irzstudio.githubrestapi.activity.detailuser
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
@@ -20,11 +21,11 @@ import retrofit2.Response
 
 class DetailUserActivity : AppCompatActivity() {
 
-    private lateinit var viewModel : DetailViewModel
+    private lateinit var viewModel: DetailViewModel
     private lateinit var binding: ActivityDetailuserBinding
 
     private val login: String by lazy {
-        intent.getStringExtra("login") ?: ""
+        intent.getStringExtra("login").orEmpty()
     }
     private val adapterRepoPin: PinnedAdapter by lazy {
         PinnedAdapter()
@@ -38,29 +39,38 @@ class DetailUserActivity : AppCompatActivity() {
 
         viewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
 
+        setListRepo()
+        observeLiveDataUser()
+        observeLiveDataRepo()
+        observerErrorMessage()
+
         viewModel.requestDetailUserQuery(login)
         viewModel.requestDataRepoPin(login)
-        setListRepo()
-        observeLiveData()
-        observeLiveDataRepo()
+
     }
 
-    private fun observeLiveData(){
-        viewModel.dataDetailUserList.observe(this, {dataDetailUserRespone ->
+    private fun observeLiveDataUser() {
+        viewModel.dataDetailUserList.observe(this, { dataDetailUserRespone ->
             setUserData(dataDetailUserRespone)
             loadImage(dataDetailUserRespone.avatar_url)
         })
     }
 
-    private fun observeLiveDataRepo(){
-        viewModel.dataResponse.observe(this,{dataRepoResponse ->
+    private fun observeLiveDataRepo() {
+        viewModel.dataResponse.observe(this, { dataRepoResponse ->
             adapterRepoPin.setRepoPin(dataRepoResponse)
 
         })
     }
 
+    private fun observerErrorMessage(){
+        viewModel.errorMessage.observe(this, {
+            Toast.makeText(this@DetailUserActivity, it, Toast.LENGTH_SHORT).show()
+        })
+    }
 
-    fun setUserData(dataDetailUser: DataDetailUser) {
+
+    private fun setUserData(dataDetailUser: DataDetailUser) {
         binding.tvFullname.text = dataDetailUser.login
         binding.tvUsername.text = dataDetailUser.name
         binding.tvBio.text = dataDetailUser.bio
@@ -71,7 +81,7 @@ class DetailUserActivity : AppCompatActivity() {
         binding.tvRepositories.text = dataDetailUser.public_repos.toString()
     }
 
-    fun loadImage(url: String) {
+    private fun loadImage(url: String) {
         Glide.with(this@DetailUserActivity)
             .load(url)
             .transition(DrawableTransitionOptions.withCrossFade())

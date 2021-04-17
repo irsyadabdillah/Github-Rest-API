@@ -38,9 +38,6 @@ class SearchUserActivity : AppCompatActivity() {
             adapter.setData(dataItemUserResponse)
             sumResult(dataItemUserResponse.size)
         })
-        viewModel.message.observe(this, { message ->
-            Toast.makeText(this@SearchUserActivity, message, Toast.LENGTH_SHORT).show()
-        })
     }
 
     private fun sumResult(total: Int) {
@@ -52,7 +49,6 @@ class SearchUserActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.searchUser.clearFocus()
                 viewModel.requestUserQuery(query)
-                // viewModel.sayHallo(query.orEmpty())
                 return true
             }
 
